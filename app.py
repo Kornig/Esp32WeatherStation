@@ -50,6 +50,11 @@ class MeasurementModel(db.Model):
     def __repr__(self):
         return f"Measurement(UNIXtime = {self.UNIXtime}, Humidity = {self.Humidity}, Pressure = {self.Pressure}, Temperature = {self.Temperature})"
 
+
+#metoda tworząca bazę danych sqlite
+with app.app_context():
+    db.create_all()
+
 #Zapisywanie pomiaru w bazie
 @app.route("/api/measurement", methods=["POST"])
 def measurement():
@@ -129,5 +134,4 @@ def root():
 
 
 if __name__ == "__main__":
-    #app.run(ssl_context="adhoc")
     app.run()
