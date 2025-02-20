@@ -8,7 +8,8 @@ import datetime
 import api_utilities
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://root:jcRkTUiRWKKLdKjVauQs9ojVi8IyeEk6@dpg-curo3udds78s73b4momg-a/storage_xlju"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 
@@ -51,9 +52,7 @@ class MeasurementModel(db.Model):
         return f"Measurement(UNIXtime = {self.UNIXtime}, Humidity = {self.Humidity}, Pressure = {self.Pressure}, Temperature = {self.Temperature})"
 
 
-#metoda tworząca bazę danych sqlite
-with app.app_context():
-    db.create_all()
+
 
 #Zapisywanie pomiaru w bazie
 @app.route("/api/measurement", methods=["POST"])
@@ -92,7 +91,7 @@ def measurement():
 def get_measurement(m_id):
     measurement = MeasurementModel.query.filter_by(id=m_id).first()
     if not measurement:
-        return jsonify({"error": "User not found!"}), 400
+        return jsonify({"error": "Measurement not found!"}), 400
 
     return jsonify(measurement), 200
 

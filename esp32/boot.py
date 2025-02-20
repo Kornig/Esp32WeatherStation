@@ -10,8 +10,8 @@ import network
 
 
 DEBUG = True
-SSID = ""
-PASSWD = ""
+SSID = "WIN10"
+PASSWD = "gulion1gulion2"
 
 #serwer do którego esp32 bedzie wysylac dane
 SERV_URL = "http://192.168.3.141:5000/api/measurement"
@@ -22,7 +22,7 @@ UNIX_TIME_OFFSET = 946684800
 
 #czas przez ktory urzadzenie ma spac (byc w DEEP SLEEP, radykalnie obniza zuzycie energii)
 #3min
-DEEP_SLEEP_INTERVAL = (3 * 60 * 1000)
+DEEP_SLEEP_INTERVAL = (60 * 60 * 1000)
 
 #konfiguracja I2C
 i2c = I2C(scl=Pin(22), sda=Pin(21), freq=10000)
