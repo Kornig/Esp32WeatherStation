@@ -2,29 +2,46 @@ from flask import Flask, request, jsonify
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import func
+from sqlalchemy import func, cast, Numeric
+from sqlalchemy.types import String 
 from dataclasses import dataclass
 import datetime
 import api_utilities
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://root:jcRkTUiRWKKLdKjVauQs9ojVi8IyeEk6@dpg-curo3udds78s73b4momg-a/storage_xlju"
+#app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://root:jcRkTUiRWKKLdKjVauQs9ojVi8IyeEk6@dpg-curo3udds78s73b4momg-a/storage_xlju"
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://root:jcRkTUiRWKKLdKjVauQs9ojVi8IyeEk6@dpg-curo3udds78s73b4momg-a.oregon-postgres.render.com/storage_xlju"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 
 def get_measurements_daily(unix_time_beginning, unix_time_end):
     daily_avgs = db.session.query(
-        func.date(func.datetime(MeasurementModel.UNIXtime, 'unixepoch')).label('Date'),
-        func.round(func.avg(MeasurementModel.Humidity),2).label("Humidity"),
-        func.round(func.avg(MeasurementModel.Pressure),2).label("Pressure"),
-        func.round(func.avg(MeasurementModel.Temperature),2).label("Temperature")
+        #sqlite
+        #func.date(func.datetime(MeasurementModel.UNIXtime, 'unixepoch')).label('Date'),
+        #postgre
+        cast(func.date(func.to_timestamp(MeasurementModel.UNIXtime)), String).label("Date"),
+
+        #sqlite
+        # func.round(func.avg(MeasurementModel.Humidity),2).label("Humidity"),
+        # func.round(func.avg(MeasurementModel.Pressure),2).label("Pressure"),
+        # func.round(func.avg(MeasurementModel.Temperature),2).label("Temperature")
+        #postgrhe
+        func.round(cast(func.avg(MeasurementModel.Humidity), Numeric), 2).label("Humidity"),
+        func.round(cast(func.avg(MeasurementModel.Pressure), Numeric), 2).label("Pressure"),
+        func.round(cast(func.avg(MeasurementModel.Temperature), Numeric), 2).label("Temperature")
     ).filter(
         MeasurementModel.UNIXtime >= unix_time_beginning, MeasurementModel.UNIXtime < unix_time_end
     ).group_by(
-        func.date(func.datetime(MeasurementModel.UNIXtime, 'unixepoch'))
+        #sqlite
+        #func.date(func.datetime(MeasurementModel.UNIXtime, 'unixepoch'))
+        #postgre
+        func.date(func.to_timestamp(MeasurementModel.UNIXtime))
     ).order_by(
-        func.date(func.datetime(MeasurementModel.UNIXtime, 'unixepoch'))
+        #sqlite
+        #func.date(func.datetime(MeasurementModel.UNIXtime, 'unixepoch'))
+        #postgre
+        func.date(func.to_timestamp(MeasurementModel.UNIXtime))
     ).all()
 
     dict_result = []
