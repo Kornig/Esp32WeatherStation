@@ -9,8 +9,8 @@ import datetime
 import api_utilities
 
 app = Flask(__name__)
-#app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://root:jcRkTUiRWKKLdKjVauQs9ojVi8IyeEk6@dpg-curo3udds78s73b4momg-a/storage_xlju"
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://root:jcRkTUiRWKKLdKjVauQs9ojVi8IyeEk6@dpg-curo3udds78s73b4momg-a.oregon-postgres.render.com/storage_xlju"
+#app.config["SQLALCHEMY_DATABASE_URI"] = ""
+app.config["SQLALCHEMY_DATABASE_URI"] = ""
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
